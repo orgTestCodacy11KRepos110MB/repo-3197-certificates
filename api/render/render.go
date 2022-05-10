@@ -23,14 +23,9 @@ func JSON(w http.ResponseWriter, v interface{}) {
 // JSONStatus sets the Content-Type of w to application/json unless one is
 // specified.
 func JSONStatus(w http.ResponseWriter, v interface{}, status int) {
-	var b bytes.Buffer
-	if err := json.NewEncoder(&b).Encode(v); err != nil {
-		panic(err)
-	}
-
 	setContentTypeUnlessPresent(w, "application/json")
 	w.WriteHeader(status)
-	_, _ = b.WriteTo(w)
+	_ = json.NewEncoder(w).Encode(v)
 
 	log.EnabledResponse(w, v)
 }
